@@ -1,6 +1,8 @@
 require "rxrb/version"
 
 module Rxrb
-  # Your code goes here...
   require 'rxrb/rx'
+  require 'rxrb/rx/helper'
+  require 'rxrb/rx/type'
+  require 'rxrb/rx/type/core'
 end
