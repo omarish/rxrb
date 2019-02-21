@@ -43,10 +43,12 @@ module Rxrb
 
         def check!(value)
           @alts.each do |alt|
-            alt.check!(value)
-          rescue ValidationError => e
-            e.path = '/all' + e.path
-            raise e
+            begin
+              alt.check!(value)
+            rescue ValidationError => e
+              e.path = '/all' + e.path
+              raise e
+            end
           end
           true
         end
@@ -81,8 +83,10 @@ module Rxrb
           return true unless @alts
 
           @alts.each do |alt|
-            return true if alt.check!(value)
-          rescue ValidationError
+            begin
+              return true if alt.check!(value)
+            rescue ValidationError
+            end
           end
 
           raise ValidationError.new('expected one to match', '/any')
@@ -128,10 +132,12 @@ module Rxrb
 
           if @contents_schema
             value.each do |v|
-              @contents_schema.check!(v)
-            rescue ValidationError => e
-              e.path = '/arr' + e.path
-              raise e
+              begin
+                @contents_schema.check!(v)
+              rescue ValidationError => e
+                e.path = '/arr' + e.path
+                raise e
+              end
             end
           end
 
@@ -234,10 +240,12 @@ module Rxrb
 
           if @value_schema
             value.each_value do |v|
-              @value_schema.check!(v)
-            rescue ValidationError => e
-              e.path = '/map' + e.path
-              raise e
+              begin
+                @value_schema.check!(v)
+              rescue ValidationError => e
+                e.path = '/map' + e.path
+                raise e
+              end
             end
           end
 
@@ -457,10 +465,12 @@ module Rxrb
             raise ValidationError.new("expected Array to have at least #{@content_schemata.length} elements, had #{value.length}", '/seq')
           end
           @content_schemata.each_index do |i|
-            @content_schemata[i].check!(value[i])
-          rescue ValidationError => e
-            e.path = '/seq' + e.path
-            raise e
+            begin
+              @content_schemata[i].check!(value[i])
+            rescue ValidationError => e
+              e.path = '/seq' + e.path
+              raise e
+            end
           end
 
           if value.length > @content_schemata.length
